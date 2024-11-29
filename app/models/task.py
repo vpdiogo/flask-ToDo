@@ -14,5 +14,9 @@ class Task(db.Model):
         server_onupdate=db.func.now(),
     )
 
+    def __init__(self, title, done=False):
+        self.title = title
+        self.done = done
+
     def __repr__(self) -> str:
         return f'<Task {self.title}>'
