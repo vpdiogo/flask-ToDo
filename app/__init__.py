@@ -12,11 +12,11 @@ ma = Marshmallow()
 migrate = Migrate()
 
 
-def create_app(instance_path: str = 'instance') -> Flask:
+def create_app(instance_path: str = 'instance', testing: bool = False) -> Flask:
     instance_path = os.path.abspath(instance_path)
     app = Flask(__name__, instance_path=instance_path)
 
-    config = Config(instance_path)
+    config = Config(instance_path, testing=testing)
     app.config.from_object(config)
 
     db.init_app(app)

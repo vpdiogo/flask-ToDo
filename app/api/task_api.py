@@ -35,6 +35,8 @@ def update_task(task_id):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
+    if 'title' not in data or not data['title'].strip():
+        return jsonify({'error': 'Title is required and cannot be empty'}), 400
     task = TaskService.update_task(task_id, data)
     if task is None:
         return jsonify({'error': 'Task not found or error updating task'}), 404
