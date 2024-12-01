@@ -75,6 +75,7 @@ class TaskService:
             task.title = data.get('title', task.title)
             task.description = data.get('description', task.description)
             task.done = data.get('done', task.done)
+            task.updated_at = db.func.now()
             db.session.commit()
             return task
         except NotFound:
