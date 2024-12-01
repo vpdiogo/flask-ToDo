@@ -6,13 +6,13 @@ task_api = Blueprint('task_api', __name__, url_prefix='/api/tasks')
 
 
 @task_api.route('/', methods=['GET'])
-def get_tasks():
+def get_tasks() -> tuple:
     tasks = TaskService.get_all_tasks()
     return jsonify([task.to_dict() for task in tasks]), 200
 
 
 @task_api.route('/<int:id>', methods=['GET'])
-def get_task(id):
+def get_task(id: int) -> tuple:
     task = TaskService.get_task_by_id(id)
     if task is None:
         return jsonify({'error': 'Task not found'}), 404
@@ -20,7 +20,7 @@ def get_task(id):
 
 
 @task_api.route('/', methods=['POST'])
-def create_task():
+def create_task() -> tuple:
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -31,7 +31,7 @@ def create_task():
 
 
 @task_api.route('/<int:task_id>', methods=['PATCH'])
-def update_task(task_id):
+def update_task(task_id: int) -> tuple:
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -44,7 +44,7 @@ def update_task(task_id):
 
 
 @task_api.route('/<int:task_id>', methods=['DELETE'])
-def delete_task(task_id):
+def delete_task(task_id: int) -> tuple:
     task = TaskService.delete_task(task_id)
     if task is None:
         return jsonify({'error': 'Task not found or error deleting task'}), 404
