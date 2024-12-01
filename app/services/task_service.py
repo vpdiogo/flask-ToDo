@@ -19,18 +19,18 @@ class TaskService:
         Retrieves all tasks from the database.
 
     get_task_by_id(task_id):
-        Retrieves a task by its ID. Returns None if the task is not found or if there 
+        Retrieves a task by its ID. Returns None if the task is not found or if there
         is a database error.
 
     create_task(data):
         Creates a new task with the provided data. Returns the created task.
 
     update_task(task_id, data):
-        Updates an existing task with the provided data. Returns the updated task or 
+        Updates an existing task with the provided data. Returns the updated task or
         None if the task is not found or if there is a database error.
 
     delete_task(task_id):
-        Deletes a task by its ID. Returns the deleted task or None if the task is not 
+        Deletes a task by its ID. Returns the deleted task or None if the task is not
         found or if there is a database error.
     """
 

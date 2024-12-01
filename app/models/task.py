@@ -37,7 +37,13 @@ class Task(db.Model):
         server_onupdate=db.func.now(),
     )
 
-    def __init__(self, title: str, description: str = '', done: bool = False, is_deleted: bool = False):
+    def __init__(
+        self,
+        title: str,
+        description: str = '',
+        done: bool = False,
+        is_deleted: bool = False,
+    ):
         self.title = title
         self.description = description
         self.done = done
@@ -53,6 +59,10 @@ class Task(db.Model):
             'description': self.description,
             'done': self.done,
             'is_deleted': self.is_deleted,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+            'created_at': (
+                self.created_at.isoformat() if self.created_at else None
+            ),
+            'updated_at': (
+                self.updated_at.isoformat() if self.updated_at else None
+            ),
         }
