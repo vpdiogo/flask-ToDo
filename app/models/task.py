@@ -14,9 +14,20 @@ class Task(db.Model):
         server_onupdate=db.func.now(),
     )
 
-    def __init__(self, title, done=False):
+    def __init__(self, title, description='', done=False):
         self.title = title
+        self.description = description
         self.done = done
 
     def __repr__(self) -> str:
         return f'<Task {self.title}>'
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'done': self.done,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat(),
+        }
