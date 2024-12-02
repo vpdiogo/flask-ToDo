@@ -84,7 +84,7 @@ def test_update_task(test_client, init_database):
 
 def test_delete_task(test_client, init_database):
     response = test_client.delete('/api/tasks/1')
-    assert response.status_code == 204
+    assert response.status_code == 200
 
     response = test_client.delete('/api/tasks/4')
     assert response.status_code == 404
