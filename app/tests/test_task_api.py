@@ -16,6 +16,22 @@ def test_get_task(test_client, init_database):
     assert response.json['error'] == 'Task not found'
 
 
+def test_get_completed_tasks(test_client, init_database):
+    response = test_client.get('/api/tasks/completed')
+    assert response.status_code == 200
+    assert len(response.json) == 1
+    assert response.json[0]['title'] == 'Task 1'
+    assert response.json[0]['done'] == True
+
+
+def test_get_pending_tasks(test_client, init_database):
+    response = test_client.get('/api/tasks/pending')
+    assert response.status_code == 200
+    assert len(response.json) == 1
+    assert response.json[0]['title'] == 'Task 2'
+    assert response.json[0]['done'] == False
+
+
 def test_create_task(test_client, init_database):
     response = test_client.post(
         '/api/tasks/',

@@ -36,18 +36,38 @@ class TaskService:
 
     @staticmethod
     def get_all_tasks() -> List[Task]:
-        return Task.query.all()
+        try:
+            return Task.query.all()
+        except SQLAlchemyError as e:
+            logger.error(f'Error retrieving tasks: {e}')
+            return []
+
+    @staticmethod
+    def get_completed_tasks() -> List[Task]:
+        try:
+            return Task.query.filter_by(done=True).all()
+        except SQLAlchemyError as e:
+            logger.error(f'Error retrieving completed tasks: {e}')
+            return []
+
+    @staticmethod
+    def get_pending_tasks() -> List[Task]:
+        try:
+            return Task.query.filter_by(done=False).all()
+        except SQLAlchemyError as e:
+            logger.error(f'Error retrieving pending tasks: {e}')
+            return []
 
     @staticmethod
     def get_task_by_id(task_id: int) -> Optional[Task]:
         try:
             return Task.query.get(task_id)
         except SQLAlchemyError as e:
-            logger.error(f"Error: {e}")
+            logger.error(f'Error retrieving task with id {task_id}: {e}')
             return None
 
     @staticmethod
-    def create_task(data: dict) -> Task:
+    def create_task(data: dict) -> Optional[Task]:
         try:
             new_task = Task(
                 title=data['title'],
@@ -58,7 +78,7 @@ class TaskService:
             db.session.commit()
             return new_task
         except SQLAlchemyError as e:
-            logger.error(f"Error: {e}")
+            logger.error(f'Error creating task: {e}')
             db.session.rollback()
             return None
 
@@ -71,12 +91,13 @@ class TaskService:
             task.title = data.get('title', task.title)
             task.description = data.get('description', task.description)
             task.done = data.get('done', task.done)
+            task.updated_at = db.func.now()
             db.session.commit()
             return task
         except NotFound:
             return None
         except SQLAlchemyError as e:
-            logger.error(f"Error: {e}")
+            logger.error(f'Error updating task with id {task_id}: {e}')
             db.session.rollback()
             return None
 
@@ -90,6 +111,6 @@ class TaskService:
         except NotFound:
             return None
         except SQLAlchemyError as e:
-            logger.error(f"Error: {e}")
+            logger.error(f'Error deleting task with id {task_id}: {e}')
             db.session.rollback()
             return None
