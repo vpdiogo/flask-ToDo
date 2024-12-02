@@ -55,6 +55,12 @@ flask db stamp head
 flask db upgrade
 ```
 
+### Executar Testes
+
+```sh
+pytest
+```
+
 5. Execute a aplicação:
 
 ```sh
@@ -62,6 +68,14 @@ python run.py
 ```
 
 A aplicação estará disponível em http://127.0.0.1:5000.
+
+Se houver alguma inconsistência no banco de dados identificada ao interagir com a API, basta apagar o banco gerado no diretório instance/ e também remover o diretório migrations/, e então, executar os comandos abaixos para inicializar uma nova migration.
+
+```sh
+flask db init
+flask db migrate -m "New migration"
+flask db upgrade
+```
 
 ### Estrutura do Projeto
 
@@ -94,12 +108,6 @@ flask-todo/
 ├── run.py
 ├── pytest.ini
 └── requirements.txt
-```
-
-### Executar Testes
-
-```sh
-pytest
 ```
 
 #### Testes para as Rotas da API
