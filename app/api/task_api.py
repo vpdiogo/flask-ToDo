@@ -12,6 +12,18 @@ def get_tasks() -> Response:
     return json_response([task.to_dict() for task in tasks], status=200)
 
 
+@task_api.route('/completed', methods=['GET'])
+def get_completed_tasks() -> Response:
+    tasks = TaskService.get_completed_tasks()
+    return json_response([task.to_dict() for task in tasks], status=200)
+
+
+@task_api.route('/pending', methods=['GET'])
+def get_pending_tasks() -> Response:
+    tasks = TaskService.get_pending_tasks()
+    return json_response([task.to_dict() for task in tasks], status=200)
+
+
 @task_api.route('/<int:id>', methods=['GET'])
 def get_task(id: int) -> Response:
     task = TaskService.get_task_by_id(id)

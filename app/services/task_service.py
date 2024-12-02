@@ -43,6 +43,22 @@ class TaskService:
             return []
 
     @staticmethod
+    def get_completed_tasks() -> List[Task]:
+        try:
+            return Task.query.filter_by(done=True).all()
+        except SQLAlchemyError as e:
+            logger.error(f'Error retrieving completed tasks: {e}')
+            return []
+
+    @staticmethod
+    def get_pending_tasks() -> List[Task]:
+        try:
+            return Task.query.filter_by(done=False).all()
+        except SQLAlchemyError as e:
+            logger.error(f'Error retrieving pending tasks: {e}')
+            return []
+
+    @staticmethod
     def get_task_by_id(task_id: int) -> Optional[Task]:
         try:
             return Task.query.get(task_id)
