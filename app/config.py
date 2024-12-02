@@ -32,9 +32,7 @@ class Config:
                 config_data: dict[str, Any] = json.load(f)
             self.DEBUG: bool = config_data.get('DEBUG', False)
             self.SQLALCHEMY_DATABASE_URI: str = config_data.get(
-                'SQLALCHEMY_DATABASE_URI_TEST'
-                if testing
-                else 'SQLALCHEMY_DATABASE_URI'
+                'SQLALCHEMY_DATABASE_URI'
             )
             self.SECRET_KEY: str = config_data.get('SECRET_KEY')
             self.SQLALCHEMY_TRACK_MODIFICATIONS: bool = config_data.get(

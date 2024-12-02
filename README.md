@@ -45,15 +45,13 @@ O arquivo settings.json deve ser adicionado no diretório instance/ e deve conte
 {
     "DEBUG": true,
     "SQLALCHEMY_DATABASE_URI": "sqlite:///todo.db",
-    "SQLALCHEMY_DATABASE_URI_TEST": "sqlite:///test_todo.db",
     "SECRET_KEY": "your_secret_key",
     "SQLALCHEMY_TRACK_MODIFICATIONS": false
 }
 ```
 
 ```sh
-flask db init
-flask db migrate -m "Initial migration"
+flask db stamp head
 flask db upgrade
 ```
 

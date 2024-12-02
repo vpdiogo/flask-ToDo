@@ -1,5 +1,4 @@
 import pytest
-from alembic.config import Config
 from flask_migrate import upgrade
 
 from app import create_app, db
@@ -21,11 +20,6 @@ def test_client():
 
 @pytest.fixture(scope='module')
 def init_database():
-    alembic_cfg = Config('migrations/alembic.ini')
-    alembic_cfg.set_main_option(
-        'sqlalchemy.url', 'sqlite:///instance/test_todo.db'
-    )
-
     db.create_all()
     upgrade()
 
