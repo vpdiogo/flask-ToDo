@@ -1,14 +1,12 @@
 import os
 
 from flask import Flask
-from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 from .config import Config
 
 db = SQLAlchemy()
-ma = Marshmallow()
 migrate = Migrate()
 
 
@@ -35,7 +33,6 @@ def create_app(
 
     db.init_app(app)
     migrate.init_app(app, db)
-    ma.init_app(app)
 
     # blueprints register
     from .api.task_api import task_api

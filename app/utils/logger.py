@@ -1,9 +1,10 @@
 import logging
 
+
 def get_logger(name: str) -> logging.Logger:
     """
-    Creates and returns a logger with the specified name. If the logger does not 
-    already have handlers, it adds a StreamHandler with a specific formatter and 
+    Creates and returns a logger with the specified name. If the logger does not
+    already have handlers, it adds a StreamHandler with a specific formatter and
     sets the logging level to DEBUG.
 
     Args:

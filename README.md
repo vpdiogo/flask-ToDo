@@ -1,6 +1,6 @@
 # Flask To-Do
 
-Esta é uma aplicação de lista de tarefas (To-Do) construída com Flask. A aplicação permite criar, ler, atualizar e excluir tarefas. A aplicação também inclui testes unitários e de integração para garantir que a funcionalidade esteja correta.
+Esta é uma aplicação de lista de tarefas (To-Do) construída com Flask. A API permite criar, ler, atualizar e excluir tarefas. A aplicação também inclui testes para garantir consistência dos endpoints.
 
 ## Instalação
 
@@ -34,7 +34,7 @@ pip install -r requirements.txt
 
 ```sh
 flask db init
-flask db migrate -m "Initial migration."
+flask db migrate -m "Initial migration"
 flask db upgrade
 ```
 
@@ -59,6 +59,9 @@ flask-todo/
 │   │   └── task.py
 │   ├── services/
 │   │   └── task_service.py
+│   ├── utils/
+│   │   └── response.py
+│   │   └── logger.py
 │   └── config.py
 │
 ├── instance/
@@ -97,7 +100,7 @@ pytest
 
 #### Testes para as Rotas da API
 
-- `GET /api/tasks/`: Retorna todas as tarefas
+- `GET /api/tasks/`: Retorna todas as tarefas podendo especificar filtro de "done"
 - `GET /api/tasks/<int:id>`: Retorna uma tarefa específica pelo ID
 - `POST /api/tasks/`: Cria uma nova tarefa
 - `PATCH /api/tasks/<int:id>`: Atualiza uma tarefa existente pelo ID
@@ -109,27 +112,39 @@ pytest
 
 Retorna todas as tarefas.
 
+Parâmetros de Consulta:
+
+- page (int): O número da página. Padrão é 1.
+- per_page (int): O número de itens por página. Padrão é 10.
+- done (str): Filtro para tarefas concluídas (true) ou pendentes (false).
+
 **Exemplo de Resposta:**
 
 ```json
-[
-    {
-        "id": 1,
-        "title": "Task 1",
-        "description": "Description 1",
-        "done": true,
-        "created_at": "2023-01-01T00:00:00",
-        "updated_at": "2023-01-01T00:00:00"
-    },
-    {
-        "id": 2,
-        "title": "Task 2",
-        "description": "Description 2",
-        "done": false,
-        "created_at": "2023-01-01T00:00:00",
-        "updated_at": "2023-01-01T00:00:00"
-    }
-]
+{
+    "tasks": [
+        {
+            "id": 1,
+            "title": "Task 1",
+            "description": "Description 1",
+            "done": true,
+            "created_at": "2023-01-01T00:00:00",
+            "updated_at": "2023-01-01T00:00:00"
+        },
+        {
+            "id": 2,
+            "title": "Task 2",
+            "description": "Description 2",
+            "done": false,
+            "created_at": "2023-01-01T00:00:00",
+            "updated_at": "2023-01-01T00:00:00"
+        }
+    ],
+    "total": 2,
+    "page": 1,
+    "per_page": 10,
+    "items": 2
+}
 ```
 
 ### `GET /api/tasks/<int:id>`
@@ -210,5 +225,7 @@ Exclui uma tarefa pelo ID.
 **Exemplo de Resposta:**
 
 ```json
-{}
+{
+    "message": "Task deleted successfully"
+}
 ```
