@@ -18,51 +18,53 @@ class TaskService:
     get_all_tasks():
         Retrieves all tasks from the database.
 
+    get_all_tasks_paginated(page, per_page):
+        Retrieves tasks in a paginated format. Returns a list of tasks and the
+        total number of tasks.
+
     get_task_by_id(task_id):
-        Retrieves a task by its ID. Returns None if the task is not found or if there
-        is a database error.
+        Retrieves a task by its ID. Returns None if the task is not found or if
+        there is a database error.
 
     create_task(data):
         Creates a new task with the provided data. Returns the created task.
 
     update_task(task_id, data):
-        Updates an existing task with the provided data. Returns the updated task or
-        None if the task is not found or if there is a database error.
+        Updates an existing task with the provided data. Returns the updated task
+        or None if the task is not found or if there is a database error.
 
     delete_task(task_id):
-        Deletes a task by its ID. Returns the deleted task or None if the task is not
-        found or if there is a database error.
+        Deletes a task by its ID. Returns the deleted task or None if the task is
+        not found or if there is a database error.
     """
 
     @staticmethod
     def get_all_tasks() -> List[Task]:
         try:
             return Task.query.all()
-        except SQLAlchemyError as e:
+        except Exception as e:
             logger.error(f'Error retrieving tasks: {e}')
             return []
 
     @staticmethod
-    def get_completed_tasks() -> List[Task]:
+    def get_tasks_paginated(
+        page: int = 1, per_page: int = 10, done: Optional[bool] = None
+    ) -> List[Task]:
         try:
-            return Task.query.filter_by(done=True).all()
-        except SQLAlchemyError as e:
-            logger.error(f'Error retrieving completed tasks: {e}')
-            return []
-
-    @staticmethod
-    def get_pending_tasks() -> List[Task]:
-        try:
-            return Task.query.filter_by(done=False).all()
-        except SQLAlchemyError as e:
-            logger.error(f'Error retrieving pending tasks: {e}')
-            return []
+            query = Task.query
+            if done is not None:
+                query = query.filter_by(done=done)
+            pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+            return pagination.items, pagination.total
+        except Exception as e:
+            logger.error(f'Error retrieving paginated tasks: {e}')
+            return [], 0
 
     @staticmethod
     def get_task_by_id(task_id: int) -> Optional[Task]:
         try:
             return Task.query.get(task_id)
-        except SQLAlchemyError as e:
+        except Exception as e:
             logger.error(f'Error retrieving task with id {task_id}: {e}')
             return None
 
@@ -77,7 +79,7 @@ class TaskService:
             db.session.add(new_task)
             db.session.commit()
             return new_task
-        except SQLAlchemyError as e:
+        except Exception as e:
             logger.error(f'Error creating task: {e}')
             db.session.rollback()
             return None
@@ -96,7 +98,7 @@ class TaskService:
             return task
         except NotFound:
             return None
-        except SQLAlchemyError as e:
+        except Exception as e:
             logger.error(f'Error updating task with id {task_id}: {e}')
             db.session.rollback()
             return None
@@ -110,7 +112,7 @@ class TaskService:
             return task
         except NotFound:
             return None
-        except SQLAlchemyError as e:
+        except Exception as e:
             logger.error(f'Error deleting task with id {task_id}: {e}')
             db.session.rollback()
             return None

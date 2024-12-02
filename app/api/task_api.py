@@ -13,33 +13,27 @@ logger = get_logger(__name__)
 def get_tasks():
     logger.info('Fetching all tasks')
     try:
-        tasks = TaskService.get_all_tasks()
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 5, type=int)
+        done = request.args.get('done', None, type=str)
+        if done is not None:
+            if done.lower() == 'true':
+                done = True
+            elif done.lower() == 'false':
+                done = False
+        tasks, total = TaskService.get_tasks_paginated(page, per_page, done)
+        if not tasks and page > 1:
+            logger.warning(f'Page {page} is out of range')
+            return json_response({'error': 'Page out of range'}, status=404)
     except Exception as e:
         logger.error(f'Error fetching tasks: {e}')
         return json_response({'error': 'Error fetching tasks'}, status=500)
-    return json_response([task.to_dict() for task in tasks], status=200)
-
-
-@task_api.route('/completed', methods=['GET'])
-def get_completed_tasks():
-    logger.info('Fetching completed tasks')
-    try:
-        tasks = TaskService.get_completed_tasks()
-    except Exception as e:
-        logger.error(f'Error fetching completed tasks: {e}')
-        return json_response({'error': 'Error fetching completed tasks'}, status=500)
-    return json_response([task.to_dict() for task in tasks], status=200)
-
-
-@task_api.route('/pending', methods=['GET'])
-def get_pending_tasks():
-    logger.info('Fetching pending tasks')
-    try:
-        tasks = TaskService.get_pending_tasks()
-    except Exception as e:
-        logger.error(f'Error fetching pending tasks: {e}')
-        return json_response({'error': 'Error fetching pending tasks'}, status=500)
-    return json_response([task.to_dict() for task in tasks], status=200)
+    return json_response({
+        'tasks': [task.to_dict() for task in tasks],
+        'total': total,
+        'page': page,
+        'items': len(tasks)
+    }, status=200)
 
 
 @task_api.route('/<int:id>', methods=['GET'])
