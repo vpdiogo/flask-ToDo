@@ -2,8 +2,8 @@ from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
 from app.services.task_service import TaskService
-from app.utils.response import json_response
 from app.utils.logger import get_logger
+from app.utils.response import json_response
 
 task_api = Blueprint('task_api', __name__, url_prefix='/api/tasks')
 logger = get_logger(__name__)
@@ -28,12 +28,16 @@ def get_tasks():
     except Exception as e:
         logger.error(f'Error fetching tasks: {e}')
         return json_response({'error': 'Error fetching tasks'}, status=500)
-    return json_response({
-        'tasks': [task.to_dict() for task in tasks],
-        'total': total,
-        'page': page,
-        'items': len(tasks)
-    }, status=200)
+    return json_response(
+        {
+            'tasks': [task.to_dict() for task in tasks],
+            'total': total,
+            'page': page,
+            'per_page': per_page,
+            'items': len(tasks),
+        },
+        status=200,
+    )
 
 
 @task_api.route('/<int:id>', methods=['GET'])
@@ -95,7 +99,9 @@ def update_task(task_id: int):
     try:
         task = TaskService.update_task(task_id, data)
         if task is None:
-            return json_response({'error': 'Task not found or error updating task'}, status=404)
+            return json_response(
+                {'error': 'Task not found or error updating task'}, status=404
+            )
         return json_response(task.to_dict(), status=200)
     except Exception as e:
         logger.error(f'Error updating task with ID {task_id}: {e}')

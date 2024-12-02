@@ -1,18 +1,22 @@
 def test_get_tasks(test_client, init_database):
     response = test_client.get('/api/tasks/')
     assert response.status_code == 200
-    assert len(response.json) == 4
+    assert len(response.json) == 5
     assert response.json['tasks'][0]['title'] == 'Task 1'
     assert response.json['tasks'][1]['title'] == 'Task 2'
 
     # Add more tasks to test the done filter
     test_client.post(
         '/api/tasks/',
-        json={'title': 'Task 3', 'description': 'Description 3', 'done': True}
+        json={'title': 'Task 3', 'description': 'Description 3', 'done': True},
     )
     test_client.post(
         '/api/tasks/',
-        json={'title': 'Task 4', 'description': 'Description 4', 'done': False}
+        json={
+            'title': 'Task 4',
+            'description': 'Description 4',
+            'done': False,
+        },
     )
 
     # Filter completed tasks
@@ -42,8 +46,9 @@ def test_get_tasks(test_client, init_database):
             json={
                 'title': f'Task {i}',
                 'description': f'Description {i}',
-                'done': False
-            })
+                'done': False,
+            },
+        )
 
     # Page 1, 5 tasks per page
     response = test_client.get('/api/tasks/?page=1&per_page=5')

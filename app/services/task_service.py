@@ -1,6 +1,7 @@
-from sqlalchemy.exc import SQLAlchemyError
-from werkzeug.exceptions import NotFound
 from typing import List, Optional
+
+from werkzeug.exceptions import NotFound
+
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -54,7 +55,9 @@ class TaskService:
             query = Task.query
             if done is not None:
                 query = query.filter_by(done=done)
-            pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+            pagination = query.paginate(
+                page=page, per_page=per_page, error_out=False
+            )
             return pagination.items, pagination.total
         except Exception as e:
             logger.error(f'Error retrieving paginated tasks: {e}')
