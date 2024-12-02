@@ -14,7 +14,7 @@ Esta é uma aplicação de lista de tarefas (To-Do) construída com Flask. A API
 1. Clone o repositório:
 
 ```sh
-git clone https://github.com/seu-usuario/flask-todo.git
+git clone https://github.com/vpdiogo/flask-todo.git
 cd flask-todo
 ```
 2. Crie e ative um ambiente virtual:
@@ -30,7 +30,26 @@ source .env/bin/activate  # No Windows, use .env\Scripts\activate
 pip install -r requirements.txt
 ```
 
+Execute para testar e verificar se o server roda sem erros:
+
+```sh
+python3 run.py
+```
+
 4. Configure o banco de dados:
+
+Crie um diretório instance/ na raiz do repositório.
+O arquivo settings.json deve ser adicionado no diretório instance/ e deve conter as seguintes configurações:
+
+```json
+{
+    "DEBUG": true,
+    "SQLALCHEMY_DATABASE_URI": "sqlite:///todo.db",
+    "SQLALCHEMY_DATABASE_URI_TEST": "sqlite:///test_todo.db",
+    "SECRET_KEY": "your_secret_key",
+    "SQLALCHEMY_TRACK_MODIFICATIONS": false
+}
+```
 
 ```sh
 flask db init
@@ -77,19 +96,6 @@ flask-todo/
 ├── run.py
 ├── pytest.ini
 └── requirements.txt
-```
-
-### Configuração do Banco de Dados
-O arquivo settings.json no diretório instance deve conter as seguintes configurações:
-
-```json
-{
-    "DEBUG": true,
-    "SQLALCHEMY_DATABASE_URI": "sqlite:///todo.db",
-    "SQLALCHEMY_DATABASE_URI_TEST": "sqlite:///test_todo.db",
-    "SECRET_KEY": "your_secret_key",
-    "SQLALCHEMY_TRACK_MODIFICATIONS": false
-}
 ```
 
 ### Executar Testes
