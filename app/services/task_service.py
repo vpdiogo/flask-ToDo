@@ -1,9 +1,9 @@
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.exceptions import NotFound
 from typing import List, Optional
-import logging
+from app.utils.logger import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 from app import db
 from app.models.task import Task
