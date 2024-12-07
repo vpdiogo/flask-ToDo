@@ -20,6 +20,7 @@ def test_client():
 
 @pytest.fixture(scope='module')
 def init_database():
+    db.drop_all()
     db.create_all()
     upgrade()
 
@@ -34,4 +35,3 @@ def init_database():
     yield db
 
     db.session.remove()
-    db.drop_all()
